@@ -12,19 +12,12 @@ func GetDefaultTypes() map[string]docqa.Type {
 	}
 }
 
-func factory[T docqa.Entity]() func() docqa.Entity {
-	return func() docqa.Entity {
-		var t T
-		return t
-	}
-}
-
 // GetDefaultFactories returns a list of factories that create empty [docqa.Entity],
 // keyed by entity key.
 func GetDefaultFactories() map[string]func() docqa.Entity {
 	return map[string]func() docqa.Entity{
-		"name": factory[*NameEntity](),
-		"date": factory[*DateEntity](),
-		"text": factory[*TextEntity](),
+		"name": func() docqa.Entity { return &NameEntity{} },
+		"date": func() docqa.Entity { return &DateEntity{} },
+		"text": func() docqa.Entity { return &TextEntity{} },
 	}
 }
