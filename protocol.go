@@ -19,21 +19,21 @@ type RoleAndTask struct {
 
 // ExtractAnswers answers the given [Question]s about a document,
 // returning lists of [Entity] keyed by question key.
-func ExtractAnswers(client Client, qa Protocol, questions map[string]Question, documentText string) (map[string][]Entity, error) {
-	resp, err := client.GetLLMResponse(
+func ExtractAnswers(client Client, qa Protocol, questions map[string]Question, documentText string) (map[string][]Entity, LLMUsage, error) {
+	resp, usage, err := client.GetLLMResponse(
 		qa.SystemPrompt(questions),
 		documentText,
 		qa.Schema(questions),
 	)
 	if err != nil {
-		return nil, err
+		return nil, usage, err
 	}
 
 	answers, err := qa.ParseResponse(resp)
 	if err != nil {
-		return nil, err
+		return nil, usage, err
 	}
-	return answers, nil
+	return answers, usage, nil
 }
 
 // GetDefaultRoleAndTask builds a [RoleAndTask] for a generic document information extraction task.
